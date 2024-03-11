@@ -2,6 +2,8 @@
 
 * [객체지향(상속, 다형성, 캡슐화 등)](https://github.com/Sudongk/CS-study/blob/main/Java/java_object_oriented.md)
 
+* [Gradle] ()
+
 * [JVM 메모리 구조]()
 
 * [컴파일 과정]()
@@ -24,7 +26,9 @@
 
 * [비동기처리 문법 비교]()
 
-* [Java 8의 특징]()
+* [Java 8 특징]()
+
+* [Java 17 특징]()
 
 * [Lambda(+ Functional Interface)]()
 
