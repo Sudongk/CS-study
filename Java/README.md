@@ -1,6 +1,6 @@
 # Java
 
-* [객체지향(상속, 다형성, 캡슐화 등)]()
+* [객체지향(상속, 다형성, 캡슐화 등)](https://github.com/Sudongk/CS-study/Java/java_object_oriented.md)
 
 * [JVM 메모리 구조]()
 
