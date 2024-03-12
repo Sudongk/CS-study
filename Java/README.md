@@ -1,10 +1,8 @@
 # Java
 
-* [객체지향(상속, 다형성, 캡슐화 등)](https://github.com/Sudongk/CS-study/blob/main/Java/java_object_oriented.md)
+* [객체지향](https://github.com/Sudongk/CS-study/blob/main/Java/java_object_oriented.md)
 
-* [Gradle] ()
-
-* [JVM 메모리 구조]()
+* [JVM](https://github.com/Sudongk/CS-study/blob/main/Java/java_jvm.md)
 
 * [컴파일 과정]()
 
@@ -47,3 +45,5 @@
 * [Abstract Class vs Interface(default method)]()
 
 * [CountDownLatch & CyclicBarrier]()
+
+* [Gradle]()
