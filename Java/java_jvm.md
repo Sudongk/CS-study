@@ -19,7 +19,7 @@
 5. 해석된 바이트 코드는 Runtime Data Area의 각 영역에 배치되어 수행하며 이 과정에서 Execution Engine에 의해 GC의 작동과 스레드 동기화
 
 > JVM 세부 구조
-> ![](/Java/img/java_jvm_architecture.png)
+![](/Java/img/java_jvm_architecture.png)
 
 
 ## 클래스 로더 시스템
@@ -63,7 +63,7 @@
 * 정확히 말하자면, `런타임 데이터 영역`은 JVM의 메모리 영역으로 **자바 애플리케이션을 실행할 때 사용되는 데이터들을 적재**하는 영역이다.
 
 > Runtime Data Area 구조
-> ![](/Java/img/java_jvm_runtime_data_area.png)
+![](/Java/img/java_jvm_runtime_data_area.png)
 
 모든 스레드에서 공유(GC의 대상)
 
