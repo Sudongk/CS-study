@@ -4,6 +4,9 @@
 Trowable 클래스는 예외 처리를 할수 있는 최상위 클래스입니다 Exception과 Error는 Throwable의 상속을 받습니다.
 
 ![](img/java_throwable.png)
+
+<br>
+
 ## Error
 Error는 컴퓨터 시스템의 동작 동증 예기치 않았던 이상 상태가 발생하여 수행 중인 프로그램이 영향을 받을 경우입니다.
 
@@ -16,9 +19,9 @@ Error는 컴퓨터 시스템의 동작 동증 예기치 않았던 이상 상태�
 
 - OutOfMemoryError: JVM이 할당된 메모리의 부족으로 더이상 객체를 할당할 수 없을 때 던져지는 오류
 
-
-
 ![](img/java_error_object.png)
+
+<br>
 
 ## Exception
 Exception은 컴퓨터 시스템의 동작 도중 예기치 않았던 이상 상태가 발생하여 수행 중인 프로그램이 영향을 받는 경우입니다. 개발자가 구현한 로직에서 발생하며 개발자가 예측하여 방지할 수 잇기에 상황에 맞게 예외처리(Exception Handle)를 해야 합니다
