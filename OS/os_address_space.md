@@ -8,13 +8,11 @@
 
 * 과거에는 하나의 프로그램을 실행할 때 OS와 하나의 Process만 사용했기 때문에, 메모리를 단순하게 사용해도 문제가 없었다.
 
-## 멀티프로그래밍과 시분할 (Multiprogramming and Time Sharing
+## 멀티프로그래밍, 시분할 (Multiprogramming, Time Sharing
 
 * 하지만 최근 컴퓨터에서는 여러 개의 프로그램을 동시에 실행하기 때문에 **초기 컴퓨터의 메모리 구성으로는 활용성(utilization)과 효율성(efficiency)이 부족**해서 더 이상 사용할 수 없었다.
 
 * 그래서 해결방안으로 Time Sharing 기법을 사용하여 여러 개의 프로그램을 실행하도록 메모리 구성을 다음과 같이 바꿨다.
-
-<img src="img/os-13-address-space-2.png" width="500px">
 
 * 하나의 메모리 공간에서 여러 개의 프로세스(multiple processes)가 실행할 수 있도록 메모리 안에 프로세스가 사용할 수 있는 공간을 나눴다.
 
