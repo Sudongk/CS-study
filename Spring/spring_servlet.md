@@ -18,7 +18,7 @@
 >
 > 스프링이 자동으로 내 패키지를 포함한 모든 하위패키지에 있는 서블릿을 찾아 자동으로 등록해주기 위해 @ServletComponentScan 어노테이션 추가
 
-```
+```java
 @ServletComponentScan // 서블릿 자동 등록
 public class ServletApplication {
 
@@ -35,7 +35,7 @@ public class ServletApplication {
 
 HTTP 요청을 통해 매핑된 URL이 호출되면 서블릿 컨테이너는 다음 메서드를 실행한다.
 
-```
+```java
 @WebServlet(name = "helloServlet", urlPatterns = "/hello")
 public class HelloServlet extends HttpSevlet {
     @Override
@@ -71,7 +71,7 @@ String username = request.getParameter("username");
 
 #### response 응답 메시지
 
-```
+```java
 response.setContentType("text/plain");
 response.setCharacterEncoding("utf-8");
 response.getWriter().write("hello " + username); // HTTP 메시지 바디
@@ -126,8 +126,7 @@ username=kim&age=20
 - `request.getSession(create:true);`
 
 ## HttpServletRequest 기본 사용방법
-
-```
+```java
 @WebServlet(name = "requestHeaderServlet", urlPatterns = "/request-header")
 public class RequestHeaderServlet extends HttpServlet {
 
@@ -138,7 +137,7 @@ public class RequestHeaderServlet extends HttpServlet {
 ```
 
 ### START LINE정보
-```
+```java
 request.getMethod() // 메서드
 request.getProtocol() // 프로트콜
 request.getScheme() // 스키마
@@ -174,7 +173,7 @@ request.getHeaderNames().asIterator()
 ```
 
 #### 출력 예시
-``` 
+``` java
 host: host // 클라이언트가 요청한 서버의 호스트 이름과 포트 번호
 connection: connection // 클라이언트와 서버 간의 연결을 제어하기 위해 사용
 content-length: content-length // HTTP 요청 메시지 바디의 길이
@@ -194,7 +193,7 @@ sec-fetch-dest: sec-fetch-dest // 요청의 목적지를 나타냄
 ```
 
 #### 모든 헤더 정보가 아닌 원하는 정보만 얻고 싶을 경우
-```
+```java
 request.getServerName() // 이름
 request.getServerPort() // 포트
 
@@ -214,14 +213,10 @@ request.getCharacterEncoding() // 인코딩
 ```
 
 #### 출력 예시
-```
+```java
 request.getServerName() = localhost
 request.getServerPort() = 8080
 
-locale = ko_KR
-locale = ko
-locale = en_US
-locale = en
 request.getLocale() = ko_KR
 
 request.getContentType() = null
@@ -230,7 +225,7 @@ request.getCharacterEncoding() = null
 ```
 
 #### 그 외 기타정보
-```
+```java
 request.getRemoteHost()
 request.getRemoteAddr()
 request.getRemotePort()
@@ -241,7 +236,7 @@ request.getLocalPort()
 ```
 
 #### 출력 예시
-```
+```java
 // Remote(요청한 클라이언트) 정보
 request.getRemoteHost() = 0:0:0:0:0:0:0:1
 request.getRemoteAddr() = 0:0:0:0:0:0:0:1
@@ -253,5 +248,217 @@ request.getLocalAddr() = 0:0:0:0:0:0:0:0
 request.getLocalPort() = 8080
 ```
 
+## HTTP 요청 데이터
+
+HTTP 요청 메시지를 통해 클라이언트에서 서버로 데이터를 전달하는 방법에는 주로 3가지가 있다.
+
+- **GET - 쿼리 파라미터**
+    - /url?username=hello&age=20
+    - 바디 없이 URL의 쿼리 파라미터에 데이터를 포함해 전달
+    - ex) 검색, 필터, 페이징
+- **POST - HTML Form**
+    - content-type : application/x-www-form-urlencoded
+    - 메시지 바디에 쿼리 파리미터 형식으로 전달
+    - ex) 회원 가입, 상품 주문, HTML Form
+- **HTTP message body**
+    - HTTP API에서 주로 사용, JSON, XML, TEXT
+    - 데이터 형식은 주로 JSON
+    - POST, PUT, PATCH
+
+## HTTP 요청 데이터 - GET 쿼리 파라미터
+메시지 바디없이, URL의 `쿼리 파라미터`를 사용하여 데이터를 전달한다.
+ 
+`?`를 시작으로 보낼 수 있으며, 추가 파라미터는 `&`를 통해 구분된다.
+
+### 1. 파라미터 전송 기능
+`http://localhost:8080/request-param?username=hello&age=20`
+
+#### 전체 파라미터 조회
+```java
+@WebServlet(name="requestParamServlet", urlPatterns = "/request-param")
+public class RequestParamServlet extends HttpServlet {
+    
+    @Override
+    protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.getParameterNames().asIterator()
+                            .forEachRemaining(paramName -> System.out.println(paramName + "=" + request.getParameter(paramName)));
+    }
+}
+```
+username은 key, value는 getParameter를 통해 뽑아야함
+
+```
+username=hello
+age=20
+```
+
+#### 단일 파라미터 조회
+```java
+String username = request.getParameter("username");
+String age = request.getParameter("age");
+```
+
+```
+username = hello
+age = 20
+```
+
+#### 복수 파라미터 조회
+`http://localhost:8080/request-param?username=hello&age=20&username=hello2 `
+```java
+String[] usernames = request.getParameterValues("username");
+for (String name : usernames) {
+	System.out.println("username = " + name);
+}
+```
+
+```
+username = hello
+username = hello2
+```
+
+## HTTP 요청 데이터 - POST HTML Form
+
+HTML Form을 통해 전달되는 데이터를 받아올 수 있다.
+
+**HTML Form**
+- Content-Type: application/x-www-form-urlencoded
+- 메시지 바디에 쿼리 파라미터 형식으로 전달
+- ex) username=hello&age=20
 
 
+```html
+<form action="/request-param" method="post">
+    <input type="text" name="username">
+    <input type="text" name="age">
+    <button type="submit">전송</button>
+</form>
+```
+
+`application/x-www-form-urlencoded` 형식은 GET 쿼리 파라미터 형식과 같아, 위에서 만든 쿼리 파라미터 조회 메서드를 그대로 사용할 수 있다.
+
+=> `request.getParameter()` 는 `GET URL 쿼리 파라미터`, `POST HTML Form` 둘 다 지원한다.
+
+> **content-type**은 HTTP 메시지 바디의 데이터 형식을 지정한다.
+>
+> `GET URL 쿼리 파라미터 형식`은 HTTP 메시지 바디를 사용하지 않기 떄문에 **content-type**이 없다
+>
+> `POST HTML Form 형식`은 HTTP 메시지 바디에 해당 데이터를 포함하여 보내기 때문에 **content-type**을 지정해주어야 한다. 이렇게 폼으로 데이터를 전송하는 형식을 `application/x-www-form-urlencoded`라고 한다.
+
+## HTTP 요청데이터 - API 메시지 바디
+
+- HTTP message body에 데이터를 직접 담아서 요청
+- HTTP API에서 주로 사용
+- POST, PUT, PATCH
+
+### 단순 텍스트 형태
+- HTTP 요청 메시지의 메시지 body를 가져온다.
+- content-type : text/plain
+
+```java
+@WebServlet(name = "messageBodyServlet", urlPatterns = "/message-body")
+public class MessageBodyServlet extends HttpServlet {
+    
+    @Override
+    protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        ServletInputStream inputStream = request.getInputStream();
+        inputStream = request.getInputStream();
+        String messageBody = StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8);
+        
+        System.out.println("messageBody = " + messageBody);
+    }
+}
+```
+
+```java
+@PostMapping("/request-body-string-v1")
+public void requestBodyString(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    ServletInputStream inputStream = request.getInputStream();
+    String messageBody = StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8);
+    
+    System.out.println("messageBody = " + messageBody);
+}
+```
+
+```java
+@PostMapping("/request-body-string-v2")
+public void requestBodyStringV2(@RequestBody String messageBody) {
+    System.out.println("messageBody = " + messageBody);
+}
+```
+
+```java
+@PostMapping("/request-body-string-v3")
+public HttpEntity<String> requestBodyStringV3(HttpEntity<String> httpEntity) {
+    String messageBody = httpEntity.getBody();
+    System.out.println("messageBody = " + messageBody);
+    return new HttpEntity<>("ok");
+}
+```
+
+```java
+@PostMapping("/request-body-string-v4")
+public String requestBodyStringV4(@RequestBody String messageBody) {
+    System.out.println("messageBody = " + messageBody);
+    return "ok";
+}
+```
+
+### JSON 형태
+- HTTP 요청 메시지의 메시지 body를 가져온다.
+- content-type : application/json
+
+```java
+public class HelloData {
+    private String username;
+    private int age;
+
+    // getter
+
+    // setter
+}
+```
+JSON 형태로 파싱할 수 있도록 HelloData라는 객체 생성
+
+```java
+@WebServlet(name = "requestBodyJsonServlet", urlPatterns = "/request-body-json")
+public class RequestBodyJsonServlet extends HttpServlet {
+
+    // JSON 변환 라이브러리
+    private ObjectMapper objectMapper = new ObjectMapper();
+
+    @Override
+    protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletExcetption, IOException {
+
+        HelloData helloData = objectMapper.readValue(messageBody, HelloData.class);
+    }
+}
+```
+```
+{
+    "username": "hello",
+    "age": 20
+}
+```
+
+```java
+@PostMapping("/request-body-json-v1")
+public void requestBodyJsonV1(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    ObjectMapper objectMapper = new ObjectMapper();
+    ServletInputStream inputStream = request.getInputStream();
+    String messageBody = StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8);
+    
+    HelloData helloData = objectMapper.readValue(messageBody, HelloData.class);
+    
+    System.out.println("helloData.username = " + helloData.getUsername());
+    System.out.println("helloData.age = " + helloData.getAge());
+}
+```
+
+```java
+@PostMapping("/request-body-json-v2")
+public void requestBodyJsonV2(@RequestBody HelloData helloData) {
+    System.out.println("helloData.username = " + helloData.getUsername());
+    System.out.println("helloData.age = " + helloData.getAge());
+}
+```
