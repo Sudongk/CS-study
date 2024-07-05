@@ -1,13 +1,19 @@
 # 서블릿  (Servlet)
 - 클라이언트의 요청을 처리하고, 그 결과를 반환하는 Servlet 클래스의 구현 규칙을 지킨 자바 웹 프로그래밍 기술
 
+<br>
+
 ## 서블릿 컨테이너 (Servlet Container)
 - 서블릿을 관리하고 실행하는 컨테이너
 - 서블릿의 생명주기를 관리하고, 요청을 전달하고, 응답을 받아 클라이언트에게 전달하는 역할을 함
 
+<br>
+
 ## 서블릿의 생명주기
 - 서블릿 컨테이너에 의해 관리되는 서블릿의 생명주기
 - 서블릿 컨테이너는 서블릿의 인스턴스를 생성하고 초기화하며, 서비스 메소드를 호출하고, 소멸시키는 작업을 수행
+
+<br>
 
 ## Hello 서블릿 예제
 
@@ -99,10 +105,10 @@ response.getWriter().write("hello " + username); // HTTP 메시지 바디
 
 - 웹브라우저는 HTTP 메세지를 받아서 화면에 출력해준다.
 
+<br>
+
 ## HttpServletRequest
-> `HttepServletRequest`
->
-> HTTP 요청 메시지를 개발자 대신 파싱하여 `HttpServletRequest` 객체에 담아 제공한다.
+HTTP 요청 메시지를 개발자 대신 파싱하여 `HttpServletRequest` 객체에 담아 제공한다.
 
 HTTP 요청 메시지
 ```
@@ -125,7 +131,8 @@ username=kim&age=20
 **세션 관리 기능**
 - `request.getSession(create:true);`
 
-## HttpServletRequest 기본 사용방법
+## HttpServletRequest
+
 ```java
 @WebServlet(name = "requestHeaderServlet", urlPatterns = "/request-header")
 public class RequestHeaderServlet extends HttpServlet {
@@ -248,6 +255,8 @@ request.getLocalAddr() = 0:0:0:0:0:0:0:0
 request.getLocalPort() = 8080
 ```
 
+<br>
+
 ## HTTP 요청 데이터
 
 HTTP 요청 메시지를 통해 클라이언트에서 서버로 데이터를 전달하는 방법에는 주로 3가지가 있다.
@@ -264,6 +273,8 @@ HTTP 요청 메시지를 통해 클라이언트에서 서버로 데이터를 전
     - HTTP API에서 주로 사용, JSON, XML, TEXT
     - 데이터 형식은 주로 JSON
     - POST, PUT, PATCH
+
+<br>
 
 ## HTTP 요청 데이터 - GET 쿼리 파라미터
 메시지 바디없이, URL의 `쿼리 파라미터`를 사용하여 데이터를 전달한다.
@@ -317,6 +328,8 @@ username = hello
 username = hello2
 ```
 
+<br>
+
 ## HTTP 요청 데이터 - POST HTML Form
 
 HTML Form을 통해 전달되는 데이터를 받아올 수 있다.
@@ -344,6 +357,8 @@ HTML Form을 통해 전달되는 데이터를 받아올 수 있다.
 > `GET URL 쿼리 파라미터 형식`은 HTTP 메시지 바디를 사용하지 않기 떄문에 **content-type**이 없다
 >
 > `POST HTML Form 형식`은 HTTP 메시지 바디에 해당 데이터를 포함하여 보내기 때문에 **content-type**을 지정해주어야 한다. 이렇게 폼으로 데이터를 전송하는 형식을 `application/x-www-form-urlencoded`라고 한다.
+
+<br>
 
 ## HTTP 요청데이터 - API 메시지 바디
 
@@ -462,3 +477,148 @@ public void requestBodyJsonV2(@RequestBody HelloData helloData) {
     System.out.println("helloData.age = " + helloData.getAge());
 }
 ```
+
+> `@RequestBody` : HTTP 요청 메시지의 body에 직접 해당 내용을 입력한다.
+
+
+<br>
+
+## HttpServletResponse
+
+**HttpServletResponse 역할**
+- HTTP 응답 메시지 생성: HTTP 응답코드 지정, 헤더 생성, 바디 생성
+- 편의 기능 제공: Content-Type, 쿠키, Redirect
+
+```java
+@WebServlet(name = "responseHeaderServlet", urlPatterns = "/response-header")
+public class ResponseHeaderServlet extends HttpServlet {
+
+    @Override
+    protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletExcetption, IOException {
+
+        //[status-line]
+        response.setStatus(HttpServletResponse.SC_OK); // http 응답코드 200
+
+        //[response-headers]
+        response.setHeader("Content-Type","text/plain;charset=utf-8");
+        response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+        response.setHeader("Pragma", "no-cache");
+        response.setHeader("my-header","hello");
+
+        //[message body]
+        PrintWriter writer = response.getWriter();
+        writer.println("ok");
+    }
+}
+```
+
+작성한 응답 데이터들은 Response Headers에서 확인할 수 있다.
+
+```
+Content-Type: text/plain;charset=utf-8
+Cache-Control: no-cache, no-store, must-revalidate
+Pragma: no-cache
+my-header: hello
+```
+
+### 편의 메서드 제공
+
+```java
+private void content(HttpServletResponse response) {
+    // Content 편의 메서드
+    response.setContentType("text/plain");
+    response.setCharacterEncoding("utf-8");
+}
+
+private void cookie(HttpServletResponse response) {
+    // 쿠키 편의 메서드 
+    Cookie cookie = new Cookie("myCookie", "good");
+    cookie.setMaxAge(600); //600초
+    response.addCookie(cookie);
+}
+
+private void redirect(HttpServletResponse response) {
+    // redirect 편의 메서드
+    // response.setStatus(HttpServletResponse.SC_FOUND); // 302
+    // response.setHeader("Location", "/basic/hello-form.html");
+    response.sendRedirect("/basic/hello-form.html");
+} 
+```
+
+<br>
+
+## HTTP 응답 데이터 - 단순 텍스트, HTML
+
+### 단순 텍스트 응답
+```java
+@WebServlet(name = "responseHtmlServlet", urlPatterns = "/response-html")
+public class ResponseHtmlServlet extends HttpServlet {
+
+    @Ovierride
+    protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // Content-Type : text/html;charset=utf-8
+        response.setContentType("text/html");
+        response.setCharacterEncoding("utf-8")
+
+        PrintWriter writer = response.getWriter();
+        writer.println("<html>");
+        writer.println("<body>");
+        writer.println(" <div>안녕?</div>");
+        writer.println("</body>");
+        writer.println("</html>");
+    }
+}
+```
+
+### HTTP 응답 데이터 - API JSON
+
+```java
+public class HelloData {
+    private String username;
+    private int age;
+
+    // getter
+
+    // setter
+}
+```
+
+```java 
+@WebServlet(name = "responseJsonServlet", urlPatterns = "/response-json")
+public class ResponseJsonServlet extends HttpServlet {
+
+    private ObjectMapper objectMapper = new ObjectMapper();
+
+    @Override
+    protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // Content-Type : application/json
+        response.setContentType("application/json");
+        response.setCharacterEncoding("utf-8");
+
+        HelloData helloData = new HelloData();
+        helloData.setUsername("hello");
+        helloData.setAge(20);
+
+        String result = objectMapper.writeValueAsString(helloData);
+        response.getWriter().write(result);
+    }
+}
+```
+
+```java
+@PostMapping("/response-json-v2")
+@ResponseBody
+public HelloData responseJsonV2() {
+    HelloData helloData = new HelloData();
+    helloData.setUsername("hello");
+    helloData.setAge(20);
+    return helloData;
+}
+```
+
+> `@ResponseBody` : HTTP 응답 메시지의 body에 직접 해당 내용을 입력한다.
+
+<br>
+
+> `application/json`은 스펙 상 utf-8 형식을 사용하도록 정의되어 있다.
+> 그래서 스펙에 charset=utf-8과 같은 추가 파라미터를 지원하지 않는다. 따라서 `application/json`이라고만 사용해야지, `application/json;charset=utf-8`이라고 전달하는 것은 의미없는 파라미터를 추가한 것이 된다.
