@@ -212,9 +212,26 @@ public class MemberRepositoryTest {
     - placeholder: 입력창에 표시할 힌트
 
 
+### index.jsp
+    
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+  <h1>index.html</h1>
+  <p><a href="/join-form.jsp">add new member</a></p>
+  <p><a href="/members.jsp">show all members</a></p>
+</body>
+</html>
+```
+
 ### join-form.jsp
 
-```jsp
+```html
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -244,16 +261,13 @@ public class MemberRepositoryTest {
 <%@ page import="com.example.demo.member.Member" %>
 <%@ page import="com.example.demo.member.Repository" %>
 <%
-    Repository repository = Repository.getInstance();
+    MemberRepository memberRepository = MemberRepository.getInstance();
 
     String username = request.getParameter("username");
     Integer age = Integer.parseInt(request.getParameter("age"));
 
-    Member newMember = Member.builder()
-            .username(username)
-            .age(age)
-            .build();
-    Member savedMember = repository.save(newMember);
+    Member newMember = new Member(username, age);
+    Member savedMember = memberRepository.save(newMember);
 %>
 <html>
 <head>
@@ -276,7 +290,7 @@ public class MemberRepositoryTest {
 <%@ page import="com.example.demo.member.Repository" %>
 <%@ page import="java.util.List" %>
 <%
-    Repository repository = Repository.getInstance();
+    MemberRepository memberRepository = MemberRepository.getInstance();
     List<Member> members = repository.findAll();
 %>
 <html>
