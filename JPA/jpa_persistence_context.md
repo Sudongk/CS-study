@@ -77,7 +77,7 @@
 <summary>예제 코드</summary>
 <div>
 
-```
+```java
   ...
   MyEntity newEntity = new MyEntity(1, "entity1");
 
@@ -102,10 +102,10 @@
 <summary>예제 코드</summary>
 <div>
 
-```
+```java
   ...
   tx.begin(); // 트랜잭션 시작
-  System.out.println("transaction began\n");
+  System.out.println("transaction begin");
 
   MyEntity newEntity = new MyEntity(1, "entity1");
   em.persist(newEntity);                              // 새 엔티티 인스턴스 영속화
@@ -113,7 +113,7 @@
   System.out.println(foundEntity);
 
   tx.commit(); // 트랜잭션 종료, 데이터베이스 반영
-  System.out.println("\ntransaction committed");
+  System.out.println("transaction committed");
   ...
 
   Result ======================================================
@@ -148,22 +148,22 @@
 <summary>예제 코드</summary>
 <div>
 
-```
+```java
   ...
   tx.begin();
-  System.out.println("transaction began\n");
+  System.out.println("transaction begin");
 
   foundEntity = em.find(MyEntity.class, 1);
   foundEntity.setValue("changed value");
 
   tx.commit();
-  System.out.println("\ntransaction committed");
+  System.out.println("transaction committed");
   ...
 
   Result ======================================================
 
   ...
-  transaction began
+  transaction begin
 
   Hibernate: 
       select
@@ -199,7 +199,7 @@
     
 #### JPQL 쿼리를 실행 할 때 왜 플러시 되는 이유
 
-```
+```java
 em.persist(newEntityA);
 em.persist(newEntityB);
 em.persist(newEntityC);
