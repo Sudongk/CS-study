@@ -38,7 +38,7 @@
 
 - 톰캣을 프로젝트에서 netty로 변경하는 것은 복잡한 과정이 있지만, 이것이 추상화가 되고 편하게 사용할수 있게됩니다.
 
-## Spring에대 대표적으로 재공하는 PSA
+## Spring에서 대표적으로 재공하는 PSA
 
 ### Spring Web MVC
 
@@ -56,13 +56,15 @@
 
 - 또한 JDBC를 사용하는 DatasourceTransactionManager, JPA를 사용하는 JpaTransactionManager, Hibernate를 사용하는 HibernateTransactionManager를 유연하게 바꿔서 사용할수 있습니다.
 
-즉- , 구현제가 변경이 되어도 트랙잭션이 처리하는데 전혀 문제가 없습니다
+- 즉, 구현제가 변경이 되어도 트랙잭션이 처리하는데 전혀 문제가 없습니다
 
-### Sprint Cache
+### Spring Cache
 
 - Cache도 Transaction과 동일하게 JCacheManager, ConcurrentMapCacheMannager, EhCacheManager를 사용할수 있습니다.
 
 - 사용자는 @Cacheable 에노테이션을 붙여줌으로써 구현재를 크게 신경쓰지 않아도 필요에 따라 바꿔 쓸수 있다.
+
+<br>
 
 # IOC(Inversion Of Control)
 
@@ -156,6 +158,8 @@ public class A {
 }
 ```
 
+<br>
+
 # AOP(Aspect Oriented Programming)
 
 - 관점 지향 프로그래밍이란 객채 지향 프로그램밍의 단점을 보완하기 위해 나온 패러다임이다.
@@ -173,6 +177,8 @@ public class A {
 - AOP는 주로 로깅, 트랜잭션, 보안, 예외 처리 등에 사용됩니다.
 
 - AOP는 주로 Proxy를 사용하여 구현이 됩니다.
+    - Proxy는 대리인이라는 뜻으로, 클라이언트가 서비스를 요청하면, 서비스를 제공하는 객체 대신에 Proxy 객체가 요청을 받아서 처리하는 방식입니다.
+    - Proxy 객체는 클라이언트의 요청을 처리하기 전에 추가적인 작업을 수행할 수 있습니다.
 
 - Spring에서는 AOP를 구현하기 위해 `@Aspect` 어노테이션을 사용합니다.
 
